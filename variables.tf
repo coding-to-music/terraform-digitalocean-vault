@@ -1,3 +1,8 @@
+variable "digitalocean_token" {
+  type        = string
+  description = "Digitalocean auth token"
+}
+
 variable "project_name" {
   type        = string
   description = "Name of the project to find"
