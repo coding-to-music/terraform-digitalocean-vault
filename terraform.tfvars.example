@@ -8,6 +8,8 @@
 # s-2vcpu-4gb         $24   80GB
 # s-4vcpu-8gb         $48   160GB
 
+digitalocean_token = ""
+
 # variable "project_name" {
 #   type        = string
 #   description = "Name of the project to find"
