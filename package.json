@@ -1,0 +1,24 @@
+{
+  "name": "terraform-digitalocean-vault",
+  "version": "1.0.0",
+  "description": "[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit) [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/brucellino/tfmod-template/main.svg)](https://results.pre-commit.ci/latest/github/brucellino/tfmod-template/main) [![semantic-release: conventional](https://img.shields.io/badge/semantic--release-conventional-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)",
+  "main": "commitlint.config.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "deploy": "git add . && git commit -m Build && git push",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brucellino/terraform-digitalocean-vault.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brucellino/terraform-digitalocean-vault/issues"
+  },
+  "homepage": "https://github.com/brucellino/terraform-digitalocean-vault#readme"
+}

@@ -1,0 +1,9 @@
+
+# Digitalocean Configuration
+digitalocean_token = ""
+digitalocean_droplet_image = "docker-20-04"
+digitalocean_droplet_region = "nyc1"
+digitalocean_droplet_size = "s-1vcpu-1gb"
+digitalocean_key_name = ""
+digitalocean_priv_key_path = ""
+
