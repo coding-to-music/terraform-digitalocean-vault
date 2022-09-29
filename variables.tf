@@ -9,23 +9,29 @@ variable "domain_name" {
   default     = "example.com"
 }
 
+variable "droplet_image" {
+  type        = string
+  description = "image to use for the droplet"
+  default     = "ubuntu-20-04-x64"
+}
 
 variable "project_name" {
   type        = string
   description = "Name of the project to find"
-  default     = "My_Project"
+  default     = "Datacenter"
 }
 
 variable "vpc_name" {
   type        = string
   description = "Name of the VPC we are using"
-  default     = "my-vpc"
+  default     = "Datacenter"
 }
 
 variable "droplet_size" {
   type        = string
   description = "Size of the droplet for Vault instances"
   default     = "s-1vcpu-1gb"
+  # default     = "s-1vcpu-512mb-10gb"
 }
 
 variable "ssh_public_key_url" {

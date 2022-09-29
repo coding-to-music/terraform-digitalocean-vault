@@ -47,7 +47,7 @@ resource "digitalocean_record" "lb" {
 resource "digitalocean_certificate" "cert" {
   name    = "vault-external"
   type    = "lets_encrypt"
-  domains = ["*.needhamrailtrail.org"]
+  domains = ["*.test.cluster"]
   lifecycle {
     create_before_destroy = true
   }
@@ -99,7 +99,8 @@ resource "digitalocean_loadbalancer" "external" {
 
 resource "digitalocean_droplet" "vault" {
   count         = var.instances
-  image         = data.digitalocean_images.ubuntu.images[0].slug
+  image         = var.droplet_image
+  # image         = data.digitalocean_images.ubuntu.images[0].slug
   name          = "vault-${count.index}"
   region        = data.digitalocean_vpc.vpc.region
   size          = var.droplet_size
