@@ -115,7 +115,7 @@ resource "digitalocean_droplet" "vault" {
     {
       vault_version = "1.11.0",
       username      = var.username,
-      ssh_pub_key   = data.http.ssh_key.body
+      ssh_pub_key   = data.http.ssh_key.response_body
     }
   )
   lifecycle {
