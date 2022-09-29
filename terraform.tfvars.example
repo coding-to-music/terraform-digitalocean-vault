@@ -1,9 +1,51 @@
+# DigitalOcean
+# https://slugs.do-api.dev/
 
-# Digitalocean Configuration
-digitalocean_token = ""
-digitalocean_droplet_image = "docker-20-04"
-digitalocean_droplet_region = "nyc1"
-digitalocean_droplet_size = "s-1vcpu-1gb"
-digitalocean_key_name = ""
-digitalocean_priv_key_path = ""
+# s-1vcpu-512mb-10gb  $4    10GB
+# s-1vcpu-1gb         $6    25GB
+# s-1vcpu-2gb         $12   50GB
+# s-2vcpu-2gb         $18   60GB
+# s-2vcpu-4gb         $24   80GB
+# s-4vcpu-8gb         $48   160GB
 
+# variable "project_name" {
+#   type        = string
+#   description = "Name of the project to find"
+#   default     = "My Project"
+# }
+
+# variable "vpc_name" {
+#   type        = string
+#   description = "Name of the VPC we are using"
+#   default     = "My VPC"
+# }
+
+# variable "droplet_size" {
+#   type        = string
+#   description = "Size of the droplet for Vault instances"
+#   default     = "s-1vcpu-1gb"
+# }
+
+# variable "ssh_public_key_url" {
+#   type        = string
+#   description = "URL of of the public ssh key to add to the droplet"
+#   default     = "https://github.com/brucellino.keys"
+# }
+
+# variable "instances" {
+#   type        = number
+#   description = "number of instances in the vault cluster"
+#   default     = 3
+# }
+
+# variable "username" {
+#   type        = string
+#   description = "Name of the non-root user to add"
+#   default     = "hashiuser"
+# }
+
+# variable "ssh_inbound_source_cidrs" {
+#   type        = list(any)
+#   description = "List of CIDRs from which we will allow ssh connections on port 22"
+#   default     = []
+# }
