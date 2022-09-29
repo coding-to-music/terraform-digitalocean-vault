@@ -26,7 +26,7 @@ data "http" "ssh_key" {
 }
 
 resource "digitalocean_domain" "cluster" {
-  name = "test.cluster"
+  name = var.domain_name
 }
 
 resource "digitalocean_record" "lb" {

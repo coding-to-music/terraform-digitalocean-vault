@@ -3,6 +3,13 @@ variable "digitalocean_token" {
   description = "Digitalocean auth token"
 }
 
+variable "domain_name" {
+  type        = string
+  description = "Name of the domain"
+  default     = "example.com"
+}
+
+
 variable "project_name" {
   type        = string
   description = "Name of the project to find"
