@@ -32,7 +32,7 @@ resource "digitalocean_domain" "cluster" {
 resource "digitalocean_record" "lb" {
   domain = digitalocean_domain.cluster.name
   type   = "A"
-  name   = "Datacenter"
+  name   = "vault"
   value  = digitalocean_loadbalancer.external.ip
 }
 
@@ -44,14 +44,14 @@ resource "digitalocean_record" "lb" {
 #   value    = tostring(each.value)
 # }
 
-resource "digitalocean_certificate" "cert" {
-  name    = "vault-external"
-  type    = "lets_encrypt"
-  domains = ["%s%s", "*.", var.domain_name]
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+# resource "digitalocean_certificate" "cert" {
+#   name    = "vault-external"
+#   type    = "lets_encrypt"
+#   domains = ["%s%s", "*.", var.domain_name]
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
 resource "digitalocean_ssh_key" "vault" {
   name       = "Vault ssh key"
