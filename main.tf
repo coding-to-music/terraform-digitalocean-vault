@@ -47,7 +47,7 @@ resource "digitalocean_record" "lb" {
 resource "digitalocean_certificate" "cert" {
   name    = "vault-external"
   type    = "lets_encrypt"
-  domains = ["*.test.cluster"]
+  domains = ["*.needhamrailtrail.org"]
   lifecycle {
     create_before_destroy = true
   }
