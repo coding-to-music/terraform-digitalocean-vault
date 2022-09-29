@@ -6,13 +6,13 @@ variable "digitalocean_token" {
 variable "project_name" {
   type        = string
   description = "Name of the project to find"
-  default     = "My Project"
+  default     = "My_Project"
 }
 
 variable "vpc_name" {
   type        = string
   description = "Name of the VPC we are using"
-  default     = "My VPC"
+  default     = "my-vpc"
 }
 
 variable "droplet_size" {
