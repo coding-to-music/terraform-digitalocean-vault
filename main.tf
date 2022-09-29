@@ -32,7 +32,7 @@ resource "digitalocean_domain" "cluster" {
 resource "digitalocean_record" "lb" {
   domain = digitalocean_domain.cluster.name
   type   = "A"
-  name   = "vault"
+  name   = "Datacenter"
   value  = digitalocean_loadbalancer.external.ip
 }
 
@@ -47,7 +47,7 @@ resource "digitalocean_record" "lb" {
 resource "digitalocean_certificate" "cert" {
   name    = "vault-external"
   type    = "lets_encrypt"
-  domains = ["*.test.cluster"]
+  domains = ["%s%s", "*.", var.domain_name]
   lifecycle {
     create_before_destroy = true
   }
@@ -100,7 +100,7 @@ resource "digitalocean_loadbalancer" "external" {
 resource "digitalocean_droplet" "vault" {
   count         = var.instances
   image         = var.droplet_image
-  # image         = data.digitalocean_images.ubuntu.images[0].slug
+  # image         = data.digitalocean_images.ubuntu.images[0].slug which is "questdb-20-04"
   name          = "vault-${count.index}"
   region        = data.digitalocean_vpc.vpc.region
   size          = var.droplet_size
@@ -108,7 +108,7 @@ resource "digitalocean_droplet" "vault" {
   ipv6          = false
   backups       = false
   monitoring    = true
-  tags          = ["vault", "auto-destroy"]
+  tags          = ["vault", "auto-destroy", var.droplet_image]
   ssh_keys      = [digitalocean_ssh_key.vault.id]
   droplet_agent = true
   user_data = templatefile(
