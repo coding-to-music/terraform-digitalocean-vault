@@ -4,7 +4,7 @@ users:
     ssh-authorized-keys:
       - ${ssh_pub_key}
     shell: /bin/bash
-    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
 packages:
   - curl
   - jq
@@ -19,8 +19,8 @@ runcmd:
 manage-resolv-conf: true
 resolv_conf:
   nameservers:
-    - 'ns1.digitalocean.com'
-    - 'felipe.cloudflare.com'
+    - "ns1.digitalocean.com"
+    - "felipe.cloudflare.com"
 write_files:
   - path: /etc/vault.d/vault.hcl
     content: |

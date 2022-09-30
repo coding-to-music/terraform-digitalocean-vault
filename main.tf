@@ -109,7 +109,7 @@ resource "digitalocean_droplet" "vault" {
   backups       = false
   monitoring    = true
   tags          = ["vault", "auto-destroy", var.droplet_image]
-  ssh_keys      = [digitalocean_ssh_key.vault.id]
+  # ssh_keys      = [digitalocean_ssh_key.vault.id]
   droplet_agent = true
   user_data = templatefile(
     "${path.module}/templates/userdata.tftpl",

@@ -92,3 +92,132 @@ You may want to change the names of the examples or the kinds of
 examples themselves
 
 -->
+
+# How to Install and Configure doctl
+
+https://docs.digitalocean.com/reference/doctl/how-to/install/
+
+Validated on 15 Apr 2020 • Posted on 15 Apr 2020
+
+Step 1: Install doctl
+
+Install doctl following the directions for your package manager or operating system:
+
+- Homebrew (macOS)
+- Snap Package (Ubuntu)
+- GitHub Download (Linux, macOS)
+- GitHub Download (Windows)
+
+To install the latest version of doctl using Snap on Ubuntu or other supported operating systems, run:
+
+```
+sudo snap install doctl
+```
+
+For security purposes, Snaps run in complete isolation and need to be granted permission to interact with your system’s resources. Some doctl commands require additional permissions:
+
+Using doctl’s integration with kubectl requires the kube-config personal-files interface. To enable it, run:
+
+```
+sudo snap connect doctl:kube-config
+```
+
+Using doctl compute ssh requires the core ssh-keys interface. To enable it, run:
+
+```
+sudo snap connect doctl:ssh-keys :ssh-keys
+```
+
+Using doctl registry login requires the dot-docker personal-files interface. To enable it, run:
+
+```
+sudo snap connect doctl:dot-docker
+```
+
+Step 2: Create an API token
+Create a DigitalOcean API token for your account with read and write access from the Applications & API page in the control panel. The token string is only displayed once, so save it in a safe place.
+
+Step 3: Use the API token to grant account access to doctl
+
+Note
+
+- If you installed doctl using the Ubuntu Snap package, you may need to first create the user configuration directory if it does not exist yet by running mkdir ~/.config.
+  Use the API token to grant doctl access to your DigitalOcean account. Pass in the token string when prompted by doctl auth init, and give this authentication context a name.
+
+```
+doctl auth init --context <NAME>
+```
+
+Authentication contexts let you switch between multiple authenticated accounts. You can repeat steps 2 and 3 to add other DigitalOcean accounts, then list and switch between authentication contexts:
+
+```
+doctl auth list
+doctl auth switch --context <NAME>
+```
+
+Step 4: Validate that doctl is working
+Now that doctl is authorized to use your account, try some test commands.
+
+To confirm that you have successfully authorized doctl, review your account details by running:
+
+```
+doctl account get
+```
+
+If successful, the output will look like:
+
+```
+Email                      Droplet Limit    Email Verified    UUID                                        Status
+sammy@example.org          10               true              3a56c5e109736b50e823eaebca85708ca0e5087c    active
+```
+
+To confirm that you have successfully granted write access to doctl, create an Ubuntu 18.04 Droplet in the SFO2 region by running:
+
+```
+doctl compute droplet create --region tor1 --image ubuntu-18-04-x64 --size s-1vcpu-1gb <DROPLET-NAME>
+```
+
+The output of that command will include an ID column with the new Droplet’s ID. For example:
+
+```
+ID           Name            Public IPv4    Private IPv4    Public IPv6    Memory    VCPUs    Disk    Region    Image                       Status    Tags    Features    Volumes
+187949338    droplet-name                                                  1024      1        25      sfo2      Ubuntu 18.04.3 (LTS) x64    new
+```
+
+Use that value to delete the Droplet by running:
+
+```
+doctl compute droplet delete <DROPLET-ID>
+```
+
+When prompted, type y to confirm that you would like to delete the Droplet.
+
+Step 5: Install Serverless Functions support (Optional)
+To use doctl with our serverless Functions product, you must first install a software extension, then use it to connect to the development namespace.
+
+To install the support for serverless Functions, run the serverless install subcommand:
+
+```
+doctl serverless install
+```
+
+This will download and install the extension, providing status updates along the way:
+
+```
+Downloading...Unpacking...Installing...Cleaning up...
+Done
+```
+
+You are now ready to create a namespace and deploy your functions. See the Functions Quickstart to get started.
+
+## Import existing Digitalocean resources into Terraform
+
+https://www.koding.com/docs/terraform/providers/do/r/ssh_key.html/
+
+https://www.digitalocean.com/community/tutorials/how-to-import-existing-digitalocean-assets-into-terraform#step-3-importing-your-assets-to-terraform
+
+https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/data-sources/ssh_key
+
+```
+terraform import digitalocean_ssh_key.vault 263654
+```
