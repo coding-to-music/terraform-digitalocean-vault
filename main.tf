@@ -32,7 +32,7 @@ resource "digitalocean_domain" "cluster" {
 resource "digitalocean_record" "lb" {
   domain = digitalocean_domain.cluster.name
   type   = "A"
-  name   = "vault"
+  name   = "lb-vault"
   value  = digitalocean_loadbalancer.external.ip
 }
 

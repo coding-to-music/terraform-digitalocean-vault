@@ -33,6 +33,7 @@ package-lock.json
 node_modules/
 
 .env
+bug-report.md
 
 # Local .terraform directories
 **/.terraform/*
