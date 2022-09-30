@@ -30,8 +30,8 @@ variable "vpc_name" {
 variable "droplet_size" {
   type        = string
   description = "Size of the droplet for Vault instances"
-  default     = "s-1vcpu-1gb"
-  # default     = "s-1vcpu-512mb-10gb"
+  # default     = "s-1vcpu-1gb"
+  default     = "s-1vcpu-512mb-10gb"
 }
 
 variable "ssh_public_key_url" {
