@@ -144,8 +144,22 @@ Note
 - If you installed doctl using the Ubuntu Snap package, you may need to first create the user configuration directory if it does not exist yet by running mkdir ~/.config.
   Use the API token to grant doctl access to your DigitalOcean account. Pass in the token string when prompted by doctl auth init, and give this authentication context a name.
 
+https://docs.digitalocean.com/reference/doctl/reference/auth/
+
 ```
 doctl auth init --context <NAME>
+
+# I used:
+
+doctl auth init --access-token <goes here>
+```
+
+Output
+
+```
+Using token [dop_v1_here]
+
+Validating token... OK
 ```
 
 Authentication contexts let you switch between multiple authenticated accounts. You can repeat steps 2 and 3 to add other DigitalOcean accounts, then list and switch between authentication contexts:
@@ -219,5 +233,32 @@ https://www.digitalocean.com/community/tutorials/how-to-import-existing-digitalo
 https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/data-sources/ssh_key
 
 ```
-terraform import digitalocean_ssh_key.vault 263654
+doctl compute ssh-key list [flags]
 ```
+
+```
+ID          Name                                 FingerPrint
+36253934    key_name-1                           56::8e:c0
+31373390    key_name-1                           d7::04:71:6f:58
+```
+
+```
+terraform import digitalocean_ssh_key.vault 36253934
+
+terraform import digitalocean_ssh_key.vault 31373390
+```
+
+```
+Import successful!
+
+The resources that were imported are shown above. These resources are now in
+your Terraform state and will henceforth be managed by Terraform.
+```
+
+## Domain records
+
+https://docs.digitalocean.com/reference/doctl/reference/compute/domain/records/
+
+doctl compute domain get
+
+doctl compute domain records list
