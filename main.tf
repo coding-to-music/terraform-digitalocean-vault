@@ -182,22 +182,22 @@ resource "digitalocean_droplet" "vault" {
     create_before_destroy = true
   }
 
-  connection {
-    host = "${digitalocean_droplet.vault[count.index].ipv4_address}"
-    type = "ssh"
-    user = "root"
-    timeout = "600"
-    agent = false
-    private_key = "${tls_private_key.terraform-bootstrap-sshkey.private_key_pem}"
-  }
+  # connection {
+  #   host = "${digitalocean_droplet.vault[count.index].ipv4_address}"
+  #   type = "ssh"
+  #   user = "root"
+  #   timeout = "600"
+  #   agent = false
+  #   private_key = "${tls_private_key.terraform-bootstrap-sshkey.private_key_pem}"
+  # }
 
-  provisioner "remote-exec" {
-    inline = [
-      # wait until we get signal that the instance has finished booting
-      "while [ ! -e '/var/lib/cloud/instance/boot-finished' ]; do echo '===tail -n3 /var/log/messages==='; tail -n3 /var/log/messages; sleep 3; done",
-      "sleep 5"
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     # wait until we get signal that the instance has finished booting
+  #     "while [ ! -e '/var/lib/cloud/instance/boot-finished' ]; do echo '===tail -n3 /var/log/messages==='; tail -n3 /var/log/messages; sleep 3; done",
+  #     "sleep 5"
+  #   ]
+  # }
 
   depends_on = [ digitalocean_ssh_key.terraform-bootstrap-sshkey ]
 }
