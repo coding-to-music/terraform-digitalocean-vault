@@ -44,14 +44,14 @@ resource "digitalocean_record" "lb" {
 #   value    = tostring(each.value)
 # }
 
-resource "digitalocean_certificate" "cert" {
-  name    = "vault-external2"
-  type    = "lets_encrypt"
-  domains = ["%s%s", "*.", var.domain_name]
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+# resource "digitalocean_certificate" "cert" {
+#   name    = "vault-external2"
+#   type    = "lets_encrypt"
+#   domains = ["%s%s", "*.", var.domain_name]
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
 resource "digitalocean_ssh_key" "vault" {
   name       = "Vault ssh key"
@@ -109,14 +109,15 @@ resource "digitalocean_droplet" "vault" {
   backups       = false
   monitoring    = true
   tags          = ["vault", "auto-destroy", var.droplet_image]
-  # ssh_keys      = [digitalocean_ssh_key.vault.id]
+  ssh_keys      = [digitalocean_ssh_key.vault.id]
   droplet_agent = true
   user_data = templatefile(
     "${path.module}/templates/userdata.tftpl",
     {
       vault_version = "1.11.0",
       username      = var.username,
-      ssh_pub_key   = data.http.ssh_key.response_body
+      # ssh_pub_key   = data.http.ssh_key.response_body
+      ssh_pub_key   = "data goes here"
     }
   )
   lifecycle {
