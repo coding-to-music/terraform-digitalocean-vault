@@ -97,6 +97,62 @@ resource "digitalocean_loadbalancer" "external" {
   # redirect_http_to_https = true
 }
 
+resource "null_resource" "local-tests" {
+  provisioner "local-exec" {
+    command = <<EOF
+      if [ $(which jq | wc -l) -lt 1 ]; then
+        echo 'jq tool not installed on this system'
+        exit 1
+      fi
+      if [ $(which curl | wc -l) -lt 1 ]; then
+        echo 'curl tool not installed on this system'
+        exit 1
+      else
+        curl -f -s -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer ${var.digitalocean_token}' \
+          'https://api.digitalocean.com/v2/regions' > /dev/null
+      fi
+      if [ $? -gt 0 ]; then
+        echo 'problem using curl to call the digitalocean api'
+        exit 1
+      fi
+    EOF
+  }
+}
+
+# create a unique build-id value for this image build process
+# ===
+resource "random_string" "build-id" {
+  length = 6
+  lower = false
+  upper = true
+  numeric = true
+  special = false
+
+  depends_on = [ null_resource.local-tests ]
+}
+
+# Generate a temporary ssh keypair to bootstrap this instance
+# ===
+resource "tls_private_key" "terraform-bootstrap-sshkey" {
+  algorithm = "RSA"
+  rsa_bits = "4096"
+
+  depends_on = [null_resource.local-tests]
+}
+
+# attach the temporary sshkey to the provider account for this image build
+# ===
+# !!!  NB: this ssh key remains in CLEAR TEXT in the terraform.tfstate file and can be extracted using:-
+# !!!  $ cat terraform.tfstate | jq --raw-output '.modules[1].resources["tls_private_key.terraform-bootstrap-sshkey"].primary.attributes.private_key_pem'
+# ===
+resource "digitalocean_ssh_key" "terraform-bootstrap-sshkey" {
+  name = "terraform-bootstrap-sshkey-${random_string.build-id.result}"
+  public_key = "${tls_private_key.terraform-bootstrap-sshkey.public_key_openssh}"
+
+  depends_on = [ random_string.build-id, tls_private_key.terraform-bootstrap-sshkey ]
+}
+
+
 resource "digitalocean_droplet" "vault" {
   count         = var.instances
   image         = var.droplet_image
@@ -109,7 +165,9 @@ resource "digitalocean_droplet" "vault" {
   backups       = false
   monitoring    = true
   tags          = ["vault", "auto-destroy", var.droplet_image]
-  ssh_keys      = [digitalocean_ssh_key.vault.id]
+  # ssh_keys      = [digitalocean_ssh_key.vault.id]
+  ssh_keys = [ "${digitalocean_ssh_key.terraform-bootstrap-sshkey.id}" ]
+
   droplet_agent = true
   user_data = templatefile(
     "${path.module}/templates/userdata.tftpl",
@@ -123,6 +181,25 @@ resource "digitalocean_droplet" "vault" {
   lifecycle {
     create_before_destroy = true
   }
+
+  connection {
+    host = "${digitalocean_droplet.vault[count.index].ipv4_address}"
+    type = "ssh"
+    user = "root"
+    timeout = "600"
+    agent = false
+    private_key = "${tls_private_key.terraform-bootstrap-sshkey.private_key_pem}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      # wait until we get signal that the instance has finished booting
+      "while [ ! -e '/var/lib/cloud/instance/boot-finished' ]; do echo '===tail -n3 /var/log/messages==='; tail -n3 /var/log/messages; sleep 3; done",
+      "sleep 5"
+    ]
+  }
+
+  depends_on = [ digitalocean_ssh_key.terraform-bootstrap-sshkey ]
 }
 
 resource "digitalocean_firewall" "ssh" {

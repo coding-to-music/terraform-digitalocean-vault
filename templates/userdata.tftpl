@@ -16,6 +16,19 @@ runcmd:
   - chmod a+x  /usr/local/bin/vault
   - vault -version
   - mkdir -p /vault/raft
+  - mkdir -p /root/.ssh
+  - echo "$(jq -r -M '.public_keys[0]' '/var/lib/cloud/seed/config_drive/digitalocean_meta_data.json')" > /root/.ssh/authorized_keys
+
+  - chown -R root /root/.ssh
+  - chmod 700 /root/.ssh
+  - chmod 600 /root/.ssh/*
+
+  - sed -i -e '/.*PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
+  - sed -i -e '/.*PubkeyAuthentication/s/^.*$/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+  - sed -i -e '/.*PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+  - service sshd reload
+
 manage-resolv-conf: true
 resolv_conf:
   nameservers:
